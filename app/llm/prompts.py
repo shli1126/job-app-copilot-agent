@@ -12,24 +12,67 @@ Analyze the following job description and extract:
 4. Technologies mentioned
 5. Seniority level
 
+Return ONLY valid JSON in this format:
+{{
+  "core_responsibilities": ["string"],
+  "required_skills": ["string"],
+  "preferred_skills": ["string"],
+  "technologies": ["string"],
+  "seniority_level": "string"
+}}
+
+RULES:
+- Return ONLY JSON.
+- Do not include markdown.
+- Do not include explanation.
+- If a field is missing, return null or an empty list.
+- Extract information exactly from the job description text.
+- Do not invent responsibilities, skills, technologies, and seniority level
+
 Job description:
-{job_text}ƒ
+{job_text}
 """
 
 
 def build_parse_resume_prompt(resume_text: str) -> str:
     return f"""
-You are a resume parser.
+You are a resume parsing assistant.
 
-Extract the following from the resume:
-1. Full name
-2. Email
-3. Skills
-4. Work experiences
-5. Projects
-6. Education
+Extract structured information from the resume.
 
-Resume:
+Return ONLY valid JSON in the following format:
+
+{{
+  "full_name": "string or null",
+  "email": "string or null",
+  "skills": ["string"],
+  "experiences": [
+    {{
+      "experience_title": "string",
+      "company": "string or null",
+      "duration": "string or null",
+      "bullets": ["string"]
+    }}
+  ],
+  "projects": [
+    {{
+      "project_name": "string",
+      "description": "string or null",
+      "technologies": ["string"]
+    }}
+  ],
+  "education": ["string"]
+}}
+
+RULES:
+- Return ONLY JSON.
+- Do not include markdown.
+- Do not include explanation.
+- If a field is missing, return null or an empty list.
+- Extract information exactly from the resume text.
+- Do not invent experiences, projects, or skills.
+
+Resume text:
 {resume_text}
 """
 
